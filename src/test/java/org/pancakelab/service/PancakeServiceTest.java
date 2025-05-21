@@ -18,15 +18,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PancakeServiceTest {
-    private final PancakeService pancakeService= new PancakeServiceImpl(OrderLogger.getInstance());
+    private final PancakeService pancakeService = new PancakeServiceImpl(OrderLogger.getInstance());
     private OrderDTO order = null;
 
-    public final static String DARK_CHOCOLATE_INGREDIENT="dark chocolate";
-    public final static String MILK_CHOCOLATE_INGREDIENT="milk chocolate";
-    public final static String WHIPPED_CREAM_INGREDIENT="whipped cream";
-    public final static String HAZELNUTS_INGREDIENT="hazelnuts";
-    private final static String INITIAL_PANCAKE_DESCRIPTION="Delicious pancake with ";
-    private final static String DARK_CHOCOLATE_PANCAKE_DESCRIPTION = INITIAL_PANCAKE_DESCRIPTION +  DARK_CHOCOLATE_INGREDIENT + "!";
+    public final static String DARK_CHOCOLATE_INGREDIENT = "dark chocolate";
+    public final static String MILK_CHOCOLATE_INGREDIENT = "milk chocolate";
+    public final static String WHIPPED_CREAM_INGREDIENT = "whipped cream";
+    public final static String HAZELNUTS_INGREDIENT = "hazelnuts";
+    private final static String INITIAL_PANCAKE_DESCRIPTION = "Delicious pancake with ";
+    private final static String DARK_CHOCOLATE_PANCAKE_DESCRIPTION = INITIAL_PANCAKE_DESCRIPTION + DARK_CHOCOLATE_INGREDIENT + "!";
     private final static String MILK_CHOCOLATE_PANCAKE_DESCRIPTION = INITIAL_PANCAKE_DESCRIPTION + MILK_CHOCOLATE_INGREDIENT + "!";
     private final static String MILK_CHOCOLATE_HAZELNUTS_PANCAKE_DESCRIPTION = INITIAL_PANCAKE_DESCRIPTION + MILK_CHOCOLATE_INGREDIENT + ", " + HAZELNUTS_INGREDIENT + "!";
 
@@ -127,10 +127,11 @@ public class PancakeServiceTest {
         List<String> ordersPancakes = pancakeService.viewOrder(order.id());
         assertEquals(List.of("Delicious pancake with dark chocolate, hazelnuts!"), ordersPancakes);
     }
+
     @Test
     @org.junit.jupiter.api.Order(90)
     public void GivenPancakesExist_WhenRemovingPancakeByIngredients_ThenPancakeRemoved_Test() {
-        pancakeService.addPancakes(order.id(), List.of("dark chocolate", "hazelnuts"),1);
+        pancakeService.addPancakes(order.id(), List.of("dark chocolate", "hazelnuts"), 1);
         List<String> initialPancakes = pancakeService.viewOrder(order.id());
         assertEquals(2, initialPancakes.size());
         pancakeService.removePancake(order.id(), List.of("dark chocolate", "hazelnuts"));
@@ -142,7 +143,7 @@ public class PancakeServiceTest {
     @Test
     @org.junit.jupiter.api.Order(100)
     public void GivenPancakesExist_WhenRemovingPancakeById_ThenPancakeRemoved_Test() {
-        pancakeService.addPancakes(order.id(), List.of("milk chocolate"),1);
+        pancakeService.addPancakes(order.id(), List.of("milk chocolate"), 1);
         List<PancakeDTO> pancakes = pancakeService.getPancakeDescriptions(order.id());
         assertEquals(2, pancakes.size());
         UUID pancakeId = pancakes.get(1).pancakeId(); // Second pancake (milk chocolate)
@@ -166,7 +167,7 @@ public class PancakeServiceTest {
     @org.junit.jupiter.api.Order(120)
     public void GivenOrderExists_WhenGettingOrderStatus_ThenCorrectStatusReturned_Test() {
         order = pancakeService.createOrder(7, 25);
-        pancakeService.addPancakes(order.id(),List.of(DARK_CHOCOLATE_INGREDIENT), 1);
+        pancakeService.addPancakes(order.id(), List.of(DARK_CHOCOLATE_INGREDIENT), 1);
         OrderDTO orderStatus = pancakeService.getOrderStatus(order.id());
         assertEquals(order.id(), orderStatus.id());
         assertEquals(order.building(), orderStatus.building());
@@ -179,7 +180,7 @@ public class PancakeServiceTest {
     @Test
     @org.junit.jupiter.api.Order(130)
     public void GivenOrderExists_WhenGettingPancakeDescriptions_ThenCorrectDescriptionsReturned_Test() {
-        pancakeService.addPancakes(order.id(),List.of(MILK_CHOCOLATE_INGREDIENT), 1);
+        pancakeService.addPancakes(order.id(), List.of(MILK_CHOCOLATE_INGREDIENT), 1);
         List<PancakeDTO> descriptions = pancakeService.getPancakeDescriptions(order.id());
         assertEquals(2, descriptions.size());
         assertTrue(descriptions.stream().anyMatch(dto -> dto.description().equals(DARK_CHOCOLATE_PANCAKE_DESCRIPTION)));
@@ -190,9 +191,9 @@ public class PancakeServiceTest {
     @org.junit.jupiter.api.Order(140)
     public void GivenInvalidState_WhenPreparingOrder_ThenExceptionThrown_Test() {
         order = pancakeService.createOrder(2, 8);
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            pancakeService.prepareOrder(order.id());
-        });
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () ->
+                pancakeService.prepareOrder(order.id())
+        );
         assertEquals(String.format("Order must be %s (current: %s)", OrderStatus.COMPLETED, OrderStatus.NEW), exception.getMessage());
     }
 
@@ -200,9 +201,9 @@ public class PancakeServiceTest {
     @org.junit.jupiter.api.Order(150)
     public void GivenNonExistentOrder_WhenGettingOrderStatus_ThenExceptionThrown_Test() {
         UUID nonExistentOrderId = UUID.randomUUID();
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            pancakeService.getOrderStatus(nonExistentOrderId);
-        });
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                pancakeService.getOrderStatus(nonExistentOrderId)
+        );
         assertEquals("Order " + nonExistentOrderId + " not found", exception.getMessage());
     }
 
@@ -210,16 +211,16 @@ public class PancakeServiceTest {
     @org.junit.jupiter.api.Order(160)
     public void GivenInvalidQuantity_WhenAddingPancakes_ThenExceptionThrown_Test() {
         order = pancakeService.createOrder(1, 1);
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            pancakeService.addPancakes(order.id(),List.of(DARK_CHOCOLATE_INGREDIENT),0 );
-        });
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                pancakeService.addPancakes(order.id(), List.of(DARK_CHOCOLATE_INGREDIENT), 0)
+        );
         assertEquals("Quantity must be positive", exception.getMessage());
     }
 
 
     private void addPancakes() {
-        pancakeService.addPancakes(order.id(),List.of(DARK_CHOCOLATE_INGREDIENT), 3);
-        pancakeService.addPancakes(order.id(),List.of(MILK_CHOCOLATE_INGREDIENT), 3);
-        pancakeService.addPancakes(order.id(),List.of(MILK_CHOCOLATE_INGREDIENT, HAZELNUTS_INGREDIENT), 3);
+        pancakeService.addPancakes(order.id(), List.of(DARK_CHOCOLATE_INGREDIENT), 3);
+        pancakeService.addPancakes(order.id(), List.of(MILK_CHOCOLATE_INGREDIENT), 3);
+        pancakeService.addPancakes(order.id(), List.of(MILK_CHOCOLATE_INGREDIENT, HAZELNUTS_INGREDIENT), 3);
     }
 }
