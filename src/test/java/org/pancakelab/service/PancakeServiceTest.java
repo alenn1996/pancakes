@@ -15,6 +15,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+//generally I believe in tdd tests should be independent from each other which is not the case in this class
+//here if one test  fails most likely every test that follows will fail as well so it is not good practice
+//however since I have been given this test class I wasn't sure if I am allowed to remove this class  completely or refactor it at all
+//so I just slightly modified it to realign with the logic.Otherwise real testing class shall look like PancakeServiceUnitTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PancakeServiceTest {

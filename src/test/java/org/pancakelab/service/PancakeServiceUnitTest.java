@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.pancakelab.service.PancakeServiceTest.DARK_CHOCOLATE_INGREDIENT;
 import static org.pancakelab.service.PancakeServiceTest.MILK_CHOCOLATE_INGREDIENT;
 
+//this is the proper class for testing where tests are independent from each other
 public class PancakeServiceUnitTest {
     private final PancakeService pancakeService = new PancakeServiceImpl(OrderLogger.getInstance());
 
