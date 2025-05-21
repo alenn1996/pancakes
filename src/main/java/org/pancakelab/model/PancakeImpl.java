@@ -28,6 +28,7 @@ final class PancakeImpl implements Pancake {
             this.orderId = Objects.requireNonNull(orderId, "Order ID cannot be null");
         }
 
+        //to keep following builder pattern we return Builder
         Builder addIngredient(Ingredient ingredient) {
             Objects.requireNonNull(ingredient, "Ingredient cannot be null");
             ingredients.add(ingredient);

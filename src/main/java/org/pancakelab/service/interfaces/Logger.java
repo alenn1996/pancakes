@@ -12,6 +12,6 @@ public interface Logger {
     void logOrderStatusChange(Order order, String action);
     void logOrderDelivered(Order order);
     void logInvalidTransition(Order order, String action);
-    String getLastLog();
+    String getLastLog();//not used but could be needed
     void clearLogs();
 }
