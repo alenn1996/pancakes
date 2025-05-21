@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 // Enum for valid ingredients (package-private)
+//this approach maybe slightly clashes with 2nd solid principle however I don't think there are new ingredients expected
+//so thats why i went with this approach
 public enum Ingredient {
     DARK_CHOCOLATE("dark chocolate"),
     MILK_CHOCOLATE("milk chocolate"),
